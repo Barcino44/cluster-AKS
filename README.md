@@ -68,7 +68,6 @@ Entre ellas se encuentran:
 ````
   provider "azurerm" {
   features {}
-  subscription_id = "5a2e3bca-ca1d-485f-bd8e-49e0b9362ec4"
 }
 
 provider "kubernetes" {
