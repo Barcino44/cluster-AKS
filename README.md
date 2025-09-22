@@ -2,10 +2,10 @@
 
 ## Estructura del proyecto
 
-- `main.tf`: Contains the main configuration for the AKS cluster.
-- `variables.tf`: Defines input variables for customization.
-- `provider.tf`: Configures the Azure provider.
-- `nginx-deployment.yaml`: Kubernetes deployment configuration for Nginx.
+- `main.tf`: Configuración principal.
+- `variables.tf`: Configuración de las variables.
+- `provider.tf`: Configuración de los proveedores.
+- `nginx-deployment.yaml`: Para el despligue de un servidor web.
 
 ## Pasos seguidos
 
@@ -122,6 +122,49 @@ Contiene el código principal para la inicialización del cluster, ente aspectos
 - El pool de nodos workers
 - Aspectos de configuración adicionales como un load balancer y el componente de networking (CNI) a usar para la comunicación entre pods.
 
+**nginx-deployment.yaml**  
+
+````
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nginx
+````
+
+Contiene toda la información necesaria para el despliegue de servidor al interior del cluster. Entre aspectos importantes se encuentran.
+
+- El deployment que construye 3 replicas y emplea la última imagen de nginx.
+- El service que expone le servicio de nginx por el puerto 80.
+
 ### 5. Validación de los cambios
 Se ejecuta el siguiente comando para validar las configuraciones realizadas 
 ```
@@ -136,26 +179,55 @@ Lo anterior con ayuda de:
   terraform apply
 ```
 
+Tras realizar lo anterior, se puede visualizar en el portal de azure la creación del cluster y sus recursos necesarios.
+
+<p align="center">
+   <img width="1516" height="657" alt="image" src="https://github.com/user-attachments/assets/0cf32ad7-cb4d-4bdb-919f-9d381e5f6797" />
+</p>
+
+<p align="center">
+   <img width="1516" height="618" alt="image" src="https://github.com/user-attachments/assets/280c7c90-66f7-452b-a122-5994421a3ef8" />
+</p>
+
 ### 7. Despliegue del servicio de ngnix
-   
-   After the AKS cluster is up, apply the Nginx deployment:
+
+Una vez el cluster se encuentre en correcto estado se usan sus credenciales para acceder a él. Lo anterior con ayuda del siguiente comando.
+
+````
+az aks get-credentials --resource myResourceGroup --name myakscluster
+````
+
+Posteriormente se realiza el deployment y la posterior creación del servicio con ayuda de.
+
 ```
    kubectl apply -f nginx-deployment.yaml
 ```
 
-## Accessing the Nginx Website
+Podemos los pods creados con ayuda del deployment
+<p align="center">
+   <img width="749" height="115" alt="image" src="https://github.com/user-attachments/assets/faee513d-fafa-44fa-9462-0d5f1c672398" />
+</p>
 
-Once the deployment is complete, you can access the Nginx website using the external IP address of the service. Use the following command to get the external IP:
+### 8. Accesso al servidor web de nginx
 
-```bash
-kubectl get services
+Una vez el despliegue este listo, se puede acceder al sitio web usando la ip externa del servicio creado. Lo anterior con ayuda de.
+
+```
+   kubectl get services
+```
+<p align="center">
+   <img width="756" height="110" alt="image" src="https://github.com/user-attachments/assets/92986046-967c-4a0f-a02a-d13c53ca311f" />
+</p>
+
+<p align="center">
+   <img width="1421" height="376" alt="image" src="https://github.com/user-attachments/assets/1cb53103-aa9c-43ad-bb52-bd25b9a1faf8" />
+</p>
+
+### 9. Limpieza de recursos
+
+La limpieza de los recursos se realiza con ayuda de.
+
+```
+terraform destroy
 ```
 
-## Cleanup
-
-To remove all resources created by Terraform, run:
-```bash
-terraform destroy
-``` 
-
-## License
