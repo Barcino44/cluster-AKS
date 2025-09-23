@@ -1,27 +1,31 @@
-# Creación de un cluster usando AKS - Terraform
+# Creating an AKS Cluster with Terraform
 
-## Estructura del proyecto
+## Project Structure
 
-- `main.tf`: Configuración principal.
-- `variables.tf`: Configuración de las variables.
-- `provider.tf`: Configuración de los proveedores.
-- `nginx-deployment.yaml`: Para el despligue de un servidor web.
+- `main.tf`: Main cluster configuration.  
+- `variables.tf`: Variable definitions.
+- `provider.tf`: Providers configuration.  
+- `nginx-deployment.yaml`: Nginx deployment and service configuration.
 
-## Pasos seguidos
+## Steps followed
 
-### 1. **Configuración de las credenciales de Azure:**
-   Lo anterior se realiza con ayuda de.
+### 1. **Configuring Azure credentials:**
+
+This is done with the help of
+
    ````
    az login
    ````
 
-### 3. **Inicialización de terraform:**
-   Run the following command to initialize the Terraform configuration:
+### 3. **Terraform Initialization:**
+   
+The following was executed to initialize terraform.
+   
    ```
    terraform init
    ```
    
-### 4. **Explicación del código HCL**:
+### 4. **HCL Code Explanation**:
 
   **variables.tf**
    ````
@@ -55,13 +59,13 @@
       default     = "standard_a2_v2"
     }
    ````
-En este archivo son definidas las variables que serán requeridas para la inicialización del cluster.
-Entre ellas se encuentran:
-- El nombre del cluster
-- El nombre del grupo de recursos
-- La ubicación donde será desplegada el cluster
-- Los nodos del que tendrá el cluster
-- El tamaño/características de la máquina virtual (Nodos)
+This file defines the variables required for cluster initialization.
+These include:
+- The cluster name
+- The resource group name
+- The location where the cluster will be deployed
+- The number of nodes the cluster will have
+- The size/characteristics of the virtual machine (nodes)
 
  **providers.tf**
 
@@ -76,7 +80,8 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_admin_config.0.cluster_ca_certificate)
 }
 ````
-En este archivo son definidos los proveedores que son necesarios para la inicialización del cluster.
+
+This file defines the providers required for cluster initialization.
 - Azure
 - Kubernetes
 
@@ -114,12 +119,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 ````
-Contiene el código principal para la inicialización del cluster, ente aspectos importantes se encuentran.
+It contains the main code for cluster initialization. Important aspects include:
 
-- La inicialización del grupo de recursos con un nombre ``"aks_rg"``
-- La creación del cluster teniendo en cuenta diferentes recursos y variables
-- El pool de nodos workers
-- Aspectos de configuración adicionales como un load balancer y el componente de networking (CNI) a usar para la comunicación entre pods.
+- Initialization of the resource group with the name "aks_rg"
+- Creation of the cluster, taking into account different resources and variables
+- The pool of worker nodes
+- Additional configuration aspects such as a load balancer and the networking component (CNI) to use for inter-pod communication.
 
 **nginx-deployment.yaml**  
 
@@ -159,26 +164,28 @@ spec:
     app: nginx
 ````
 
-Contiene toda la información necesaria para el despliegue de servidor al interior del cluster. Entre aspectos importantes se encuentran.
+It contains all the necessary information for server deployment within the cluster. Important aspects include.
 
-- El deployment que construye 3 replicas y emplea la última imagen de nginx.
-- El service que expone le servicio de nginx por el puerto 80.
+- The deployment that builds three replicas and uses the latest nginx image.
+- The service that exposes the nginx service on port 80.
 
-### 5. Validación de los cambios
-Se ejecuta el siguiente comando para validar las configuraciones realizadas 
+### 5. Validating Changes
+
+Run the following command to validate the configurations made.
+
 ```
    terraform plan
  ```
 
-### 6.  Aplicación de la configuración
+### 6. Applying the Configuration
 
-Lo anterior con ayuda de:
+The above with the help of.
 
 ```
   terraform apply
 ```
 
-Tras realizar lo anterior, se puede visualizar en el portal de azure la creación del cluster y sus recursos necesarios.
+After completing the above, you can view the creation of the cluster and its required resources in the Azure portal.
 
 <p align="center">
    <img width="1516" height="657" alt="image" src="https://github.com/user-attachments/assets/0cf32ad7-cb4d-4bdb-919f-9d381e5f6797" />
@@ -188,28 +195,29 @@ Tras realizar lo anterior, se puede visualizar en el portal de azure la creació
    <img width="1516" height="618" alt="image" src="https://github.com/user-attachments/assets/280c7c90-66f7-452b-a122-5994421a3ef8" />
 </p>
 
-### 7. Despliegue del servicio de ngnix
+### 7. Deploying the nginx service
 
-Una vez el cluster se encuentre en correcto estado se usan sus credenciales para acceder a él. Lo anterior con ayuda del siguiente comando.
+Once the cluster is in good working order, its credentials are used to access it. This is done with the help of the following command.
 
 ````
 az aks get-credentials --resource myResourceGroup --name myakscluster
 ````
 
-Posteriormente se realiza el deployment y la posterior creación del servicio con ayuda de.
+The deployment and subsequent creation of the service is then carried out with the help of.
 
 ```
    kubectl apply -f nginx-deployment.yaml
 ```
 
-Podemos los pods creados con ayuda del deployment
+We can see the pods created with the help of the deployment.
+
 <p align="center">
    <img width="749" height="115" alt="image" src="https://github.com/user-attachments/assets/faee513d-fafa-44fa-9462-0d5f1c672398" />
 </p>
 
-### 8. Accesso al servidor web de nginx
+### 8. Access the nginx web server
 
-Una vez el despliegue este listo, se puede acceder al sitio web usando la ip externa del servicio creado. Lo anterior con ayuda de.
+Once the deployment is complete, you can access the website using the external IP of the created service. This can be done with the help of:
 
 ```
    kubectl get services
@@ -222,14 +230,17 @@ Una vez el despliegue este listo, se puede acceder al sitio web usando la ip ext
    <img width="1421" height="376" alt="image" src="https://github.com/user-attachments/assets/1cb53103-aa9c-43ad-bb52-bd25b9a1faf8" />
 </p>
 
-### 9. Conexión con k8s-lens
+### 9. Connecting to k8s-lens
 
-Para realizar la conexión con lens, se realizó la descarga mediante el link.
+To connect to lens, download it using the link.
+
 ````
 https://k8slens.dev/
 ````
-Una vez descargada, se accedió a la interfaz. 
-Posteriormente, fue añadido el archivo ``.kube/config. `` Al hacer esto, se pudo acceder al sistema de monitoreo.
+
+Once downloaded, the interface was accessed.
+
+Then, the ``.kube/config`` file was added. This allowed access to the monitoring system.
 
 <p align="center">
    <img width="929" height="580" alt="image" src="https://github.com/user-attachments/assets/7131f5b2-dc3a-4899-ad66-95e99e09da18" />
@@ -240,9 +251,9 @@ Posteriormente, fue añadido el archivo ``.kube/config. `` Al hacer esto, se pud
 </p>
 
 
-### 10. Limpieza de recursos
+### 10. Resources cleaning
 
-La limpieza de los recursos se realiza con ayuda de.
+Cleaning of resources is done with the help of.
 
 ```
 terraform destroy
