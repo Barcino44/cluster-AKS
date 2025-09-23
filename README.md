@@ -222,6 +222,24 @@ Una vez el despliegue este listo, se puede acceder al sitio web usando la ip ext
    <img width="1421" height="376" alt="image" src="https://github.com/user-attachments/assets/1cb53103-aa9c-43ad-bb52-bd25b9a1faf8" />
 </p>
 
+### 9. Conexión con lens
+
+Para realizar la conexión con lens, se realizó la descarga mediante el link.
+````
+https://k8slens.dev/
+````
+Una vez descargada, se accedió a la interfaz. 
+Posteriormente, fue añadido el archivo ``.kube/config. `` Al hacer esto, se pudo acceder al sistema de monitoreo.
+
+<p align="center">
+   <img width="929" height="580" alt="image" src="https://github.com/user-attachments/assets/7131f5b2-dc3a-4899-ad66-95e99e09da18" />
+</p>
+
+<p align="center">
+   <img width="1919" height="983" alt="image" src="https://github.com/user-attachments/assets/5e3c5a62-6a89-4380-a2e8-72a2104680a1" />
+</p>
+
+
 ### 9. Limpieza de recursos
 
 La limpieza de los recursos se realiza con ayuda de.
@@ -229,4 +247,5 @@ La limpieza de los recursos se realiza con ayuda de.
 ```
 terraform destroy
 ```
+
 
