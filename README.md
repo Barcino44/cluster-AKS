@@ -222,7 +222,7 @@ Una vez el despliegue este listo, se puede acceder al sitio web usando la ip ext
    <img width="1421" height="376" alt="image" src="https://github.com/user-attachments/assets/1cb53103-aa9c-43ad-bb52-bd25b9a1faf8" />
 </p>
 
-### 9. Conexión con lens
+### 9. Conexión con k8s-lens
 
 Para realizar la conexión con lens, se realizó la descarga mediante el link.
 ````
@@ -240,7 +240,7 @@ Posteriormente, fue añadido el archivo ``.kube/config. `` Al hacer esto, se pud
 </p>
 
 
-### 9. Limpieza de recursos
+### 10. Limpieza de recursos
 
 La limpieza de los recursos se realiza con ayuda de.
 
